@@ -4,7 +4,7 @@ name: jd_joy 宠汪汪
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0 23 * * *'
+     - cron: '40 */2 * * *'
   watch:
     types: started
 jobs:
