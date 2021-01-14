@@ -1,5 +1,5 @@
 
-name: jd_bean_change crazyJoy任务
+name: jd_crazy_joy crazyJoy任务
  
 on:
   workflow_dispatch:
