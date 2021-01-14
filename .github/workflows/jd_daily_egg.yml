@@ -24,7 +24,7 @@ jobs:
         run: |
           npm install
       - name: 运行 【京东提鹅】
-        if: env.KS_TOKEN
+        if: env.JD_COOKIE
         run: |
           node jd_daily_egg.js
         env:
