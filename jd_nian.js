@@ -111,6 +111,7 @@ function getRnd() {
 }
 function showMsg() {
   return new Promise(resolve => {
+    console.log('任务已做完！\n如有未完成的任务，请多执行几次。注：目前入会任务不会做')
     if (!jdNotify) {
       $.msg($.name, '', `${message}`);
     } else {
@@ -535,7 +536,7 @@ function requireConfig() {
     //Node.js用户请在jdCookie.js处填写京东ck;
     let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
-    if (process.env.JDNIAN_SHARECODES) {
+    if ($.isNode() && process.env.JDNIAN_SHARECODES) {
       if (process.env.JDNIAN_SHARECODES.indexOf('\n') > -1) {
         shareCodes = process.env.JDNIAN_SHARECODES.split('\n');
       } else {
