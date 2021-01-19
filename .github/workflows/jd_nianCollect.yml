@@ -1,5 +1,5 @@
 
-name: jd_nianCollect 炸年兽领爆竹
+name: jd_nianCollect 炸年兽领爆竹(2.11)
  
 on:
   workflow_dispatch:
