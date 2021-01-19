@@ -4,7 +4,7 @@ name: jd_xxl 东东爱消除
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0 23 * * *'
+     - cron: '20 * * * *'
   watch:
     types: started
 jobs:
