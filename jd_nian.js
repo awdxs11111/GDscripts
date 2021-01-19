@@ -46,7 +46,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
- `cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB`,
+  `cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB`,
   `cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB`,
   `cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB`,
   `cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB`,
@@ -482,7 +482,7 @@ function getFriendData(inviteId) {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           data = JSON.parse(data);
-          if (data && data.data['bizCode'] === 0) {
+          if (data.data && data.data['bizCode'] === 0) {
             $.itemId = data.data.result.homeMainInfo.guestInfo.itemId
             await collectScore('2',$.itemId,null,inviteId)
           }
