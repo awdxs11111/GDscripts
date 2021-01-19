@@ -1,5 +1,5 @@
 
-name: jd_kd 京豆变动通知
+name: jd_kd 京东快递签到
  
 on:
   workflow_dispatch:
