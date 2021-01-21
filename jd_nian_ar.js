@@ -34,7 +34,6 @@ if ($.isNode()) {
     cookiesArr.push(jdCookieNode[item])
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
-  if(JSON.stringify(process.env).indexOf('GITHUB')>-1) process.exit(0)
 } else {
   let cookiesData = $.getdata('CookiesJD') || "[]";
   cookiesData = jsonParse(cookiesData);
@@ -46,7 +45,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
-'cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
+  'cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
   'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
   'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
   'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
