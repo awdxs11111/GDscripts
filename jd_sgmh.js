@@ -28,10 +28,15 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let appId = '1EFRRxA' , homeDataFunPrefix = 'interact_template', collectScoreFunPrefix = 'harmony', message = ''
 let lotteryResultFunPrefix = homeDataFunPrefix, browseTime = 6
 const inviteCodes = [
-  'T019-aknAFRllhyoQlyI46gCjVWmIaW5kRrbA',
-  'T019-aknAFRllhyoQlyI46gCjVWmIaW5kRrbA'
+  'T019-ak5KVtdij6-W1ymwqQCjVWmIaW5kRrbA@T0225KkcRE9MpFfTIBr2kqVZdQCjVWmIaW5kRrbA@T020tvlxRRcR_VHKJB39nPACCjVWmIaW5kRrbA@T014-vVxRhkf8VHRKQCjVWmIaW5kRrbA@T019uvxzQRYc90nTJhPynf8CjVWmIaW5kRrbA@T022vPx6SBgR81XWPR_wl_UCfQCjVWmIaW5kRrbA',
+  'T019-ak5KVtdij6-W1ymwqQCjVWmIaW5kRrbA@T0225KkcRE9MpFfTIBr2kqVZdQCjVWmIaW5kRrbA@T020tvlxRRcR_VHKJB39nPACCjVWmIaW5kRrbA@T014-vVxRhkf8VHRKQCjVWmIaW5kRrbA@T019uvxzQRYc90nTJhPynf8CjVWmIaW5kRrbA@T022vPx6SBgR81XWPR_wl_UCfQCjVWmIaW5kRrbA',
+  'T019-ak5KVtdij6-W1ymwqQCjVWmIaW5kRrbA@T0225KkcRE9MpFfTIBr2kqVZdQCjVWmIaW5kRrbA@T020tvlxRRcR_VHKJB39nPACCjVWmIaW5kRrbA@T014-vVxRhkf8VHRKQCjVWmIaW5kRrbA@T019uvxzQRYc90nTJhPynf8CjVWmIaW5kRrbA@T022vPx6SBgR81XWPR_wl_UCfQCjVWmIaW5kRrbA',
+  'T019-ak5KVtdij6-W1ymwqQCjVWmIaW5kRrbA@T0225KkcRE9MpFfTIBr2kqVZdQCjVWmIaW5kRrbA@T020tvlxRRcR_VHKJB39nPACCjVWmIaW5kRrbA@T014-vVxRhkf8VHRKQCjVWmIaW5kRrbA@T019uvxzQRYc90nTJhPynf8CjVWmIaW5kRrbA@T022vPx6SBgR81XWPR_wl_UCfQCjVWmIaW5kRrbA',
+  'T019-ak5KVtdij6-W1ymwqQCjVWmIaW5kRrbA@T0225KkcRE9MpFfTIBr2kqVZdQCjVWmIaW5kRrbA@T020tvlxRRcR_VHKJB39nPACCjVWmIaW5kRrbA@T014-vVxRhkf8VHRKQCjVWmIaW5kRrbA@T019uvxzQRYc90nTJhPynf8CjVWmIaW5kRrbA@T022vPx6SBgR81XWPR_wl_UCfQCjVWmIaW5kRrbA',
+  'T019-ak5KVtdij6-W1ymwqQCjVWmIaW5kRrbA@T0225KkcRE9MpFfTIBr2kqVZdQCjVWmIaW5kRrbA@T020tvlxRRcR_VHKJB39nPACCjVWmIaW5kRrbA@T014-vVxRhkf8VHRKQCjVWmIaW5kRrbA@T019uvxzQRYc90nTJhPynf8CjVWmIaW5kRrbA@T022vPx6SBgR81XWPR_wl_UCfQCjVWmIaW5kRrbA'
 ];
 const randomCount = $.isNode() ? 20 : 5;
+const notify = $.isNode() ? require('./sendNotify') : '';
 let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -39,6 +44,7 @@ if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
   let cookiesData = $.getdata('CookiesJD') || "[]";
   cookiesData = jsonParse(cookiesData);
