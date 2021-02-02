@@ -20,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: sync Sunert-scripts
+      - name: sync Kyle0816-scripts
         uses: repo-sync/github-sync@v2
         if: env.PAT
         with:
@@ -34,9 +34,9 @@ jobs:
         if: env.dst_key
         with:
           # 必选，需要同步的Github用户（源）
-          src: github/Sunert
+          src: github/Kyle0816
           # 必选，需要同步到的Gitee的用户（目的）
-          dst: gitee/Sunert
+          dst: gitee/Kyle0816
           # 必选，更新指定库名字
           static_list: "Scripts"
 
