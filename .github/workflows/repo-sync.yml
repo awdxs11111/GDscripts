@@ -24,6 +24,6 @@ jobs:
         if: env.PAT
         with:
           source_repo: "https://github.com/Kyle0816/GDscripts.git"
-          source_branch: "master"
-          destination_branch: "main"
+          source_branch: "*"
+          destination_branch: "*"
           github_token: ${{ github.event.client_payload.PAT || secrets.PAT }}
