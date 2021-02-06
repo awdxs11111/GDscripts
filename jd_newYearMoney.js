@@ -1,39 +1,43 @@
 /*
-京东炸年兽AR
-活动时间:2021-1-18至2021-2-11
-活动入口:https://wbbny.m.jd.com/babelDiy/Zeus/2cKMj86srRdhgWcKonfExzK4ZMBy/index.html
-活动地址：京东app左侧浮动窗口
+京东压岁钱
+助力码会一直变，不影响助力
+活动时间：2021-2-1至2021-2-11
+活动入口：京东APP我的-压岁钱
+活动地址：https://unearth.m.jd.com/babelDiy/Zeus/22uHDsyHntidZV9tpwov2hrUUvmb/index.html
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
-#京东炸年兽AR
-0 8 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian_ar.js, tag=京东炸年兽AR, enabled=true
+#京东压岁钱
+20 8,12 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 8 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian_ar.js,tag=京东炸年兽AR
+cron "20 8,12 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, tag=京东压岁钱
 
 ===============Surge=================
-京东炸年兽AR = type=cron,cronexp="0 8 * * *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian_ar.js
+京东压岁钱 = type=cron,cronexp="20 8,12 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js
 
 ============小火箭=========
-京东炸年兽AR = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian_ar.js, cronexpr="0 8 * * *", timeout=200, enable=true
+京东压岁钱 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_newYearMoney.js, cronexpr="20 8,12 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京东炸年兽AR');
+
+const $ = new Env('京东压岁钱');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
+
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message;
+let cookiesArr = [], cookie = '', message, sendAccount = [], receiveAccount = [], receiveCardList = [];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
-  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+  if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
+  };
 } else {
   let cookiesData = $.getdata('CookiesJD') || "[]";
   cookiesData = jsonParse(cookiesData);
@@ -45,12 +49,12 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const inviteCodes = [
-  'cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
-  'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
-  'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
-  'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZK2CCJbLf6BPNDgyv5jk-UNwgcKxFRKas8vdoFF2cjEo9D7YB',
-  'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y',
-  'cgxZaDXITf-elWSgc0P7ubscQFJ44PDabXKShKgKqwPutYoAt_YP@cgxZa2mAIr3c7gvPAUnljJ6th300OTf7fB40JMlq@cgxZJ2WAIbPS4gvUDAKg55scaeN44n4KkK02wNeTv0aUrYq-m1AGCd4@cgxZdTXtIOuPuw3NCAWr6T1Jx6zImFUhgRnzchMmx27zRRUphVWOyovAl1Y'
+  `vcZ7MqMM3-E-eKRjYeM8s6D1XzX3A_XR593XTHItTVrDhQ@vpozXeFOpI5RCq59e7A8s9dkgsVO4ookOAWk0Gez@8pYzXu9AqI5KB-U4P7d4s7ya7VNUqVZm3Dq1f13eoEjdfYs@oMZeX7cd8YhTA-IzMeIj_ihasWCL0idgc-aVr3h3aYXECJTU@_pMxWu5NopZTBes3Prg8swb0Ttnmsihs0vM81vhGbX5-pQ@-JM4U-BApopWHuc1NLJ49gbp2hi71JMPzfikGv521UVOmVah`,
+  `vcZ7MqMM3-E-eKRjYeM8s6D1XzX3A_XR593XTHItTVrDhQ@vpozXeFOpI5RCq59e7A8s9dkgsVO4ookOAWk0Gez@8pYzXu9AqI5KB-U4P7d4s7ya7VNUqVZm3Dq1f13eoEjdfYs@oMZeX7cd8YhTA-IzMeIj_ihasWCL0idgc-aVr3h3aYXECJTU@_pMxWu5NopZTBes3Prg8swb0Ttnmsihs0vM81vhGbX5-pQ@-JM4U-BApopWHuc1NLJ49gbp2hi71JMPzfikGv521UVOmVah`,
+  `vcZ7MqMM3-E-eKRjYeM8s6D1XzX3A_XR593XTHItTVrDhQ@vpozXeFOpI5RCq59e7A8s9dkgsVO4ookOAWk0Gez@8pYzXu9AqI5KB-U4P7d4s7ya7VNUqVZm3Dq1f13eoEjdfYs@oMZeX7cd8YhTA-IzMeIj_ihasWCL0idgc-aVr3h3aYXECJTU@_pMxWu5NopZTBes3Prg8swb0Ttnmsihs0vM81vhGbX5-pQ@-JM4U-BApopWHuc1NLJ49gbp2hi71JMPzfikGv521UVOmVah`,
+  `vcZ7MqMM3-E-eKRjYeM8s6D1XzX3A_XR593XTHItTVrDhQ@vpozXeFOpI5RCq59e7A8s9dkgsVO4ookOAWk0Gez@8pYzXu9AqI5KB-U4P7d4s7ya7VNUqVZm3Dq1f13eoEjdfYs@oMZeX7cd8YhTA-IzMeIj_ihasWCL0idgc-aVr3h3aYXECJTU@_pMxWu5NopZTBes3Prg8swb0Ttnmsihs0vM81vhGbX5-pQ@-JM4U-BApopWHuc1NLJ49gbp2hi71JMPzfikGv521UVOmVah`,
+  `vcZ7MqMM3-E-eKRjYeM8s6D1XzX3A_XR593XTHItTVrDhQ@vpozXeFOpI5RCq59e7A8s9dkgsVO4ookOAWk0Gez@8pYzXu9AqI5KB-U4P7d4s7ya7VNUqVZm3Dq1f13eoEjdfYs@oMZeX7cd8YhTA-IzMeIj_ihasWCL0idgc-aVr3h3aYXECJTU@_pMxWu5NopZTBes3Prg8swb0Ttnmsihs0vM81vhGbX5-pQ@-JM4U-BApopWHuc1NLJ49gbp2hi71JMPzfikGv521UVOmVah`,
+  `vcZ7MqMM3-E-eKRjYeM8s6D1XzX3A_XR593XTHItTVrDhQ@vpozXeFOpI5RCq59e7A8s9dkgsVO4ookOAWk0Gez@8pYzXu9AqI5KB-U4P7d4s7ya7VNUqVZm3Dq1f13eoEjdfYs@oMZeX7cd8YhTA-IzMeIj_ihasWCL0idgc-aVr3h3aYXECJTU@_pMxWu5NopZTBes3Prg8swb0Ttnmsihs0vM81vhGbX5-pQ@-JM4U-BApopWHuc1NLJ49gbp2hi71JMPzfikGv521UVOmVah`,
 ];
 !(async () => {
   await requireConfig();
@@ -78,6 +82,31 @@ const inviteCodes = [
       }
       await shareCodesFormat();
       await jdNian()
+      await showMsg()
+    }
+  }
+  if(receiveAccount.length)
+    console.log(`开始领卡`)
+  for (let idx of receiveAccount) {
+    if (cookiesArr[parseInt(idx) - 1]) {
+      console.log(`账号${idx}领取赠卡`)
+      cookie = cookiesArr[parseInt(idx) - 1];
+      $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      $.index = parseInt(idx);
+      $.isLogin = true;
+      $.nickName = '';
+      message = '';
+      await TotalBean();
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      if (!$.isLogin) {
+        $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
+
+        if ($.isNode()) {
+          await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
+        }
+        continue
+      }
+      await receiveCards()
     }
   }
 })()
@@ -87,41 +116,53 @@ const inviteCodes = [
   .finally(() => {
     $.done();
   })
+
 async function jdNian() {
-  await getHomeData()
-  if(!$.secretp) return
-  await getArInfo()
-  await getHomeData(true)
-  await showMsg()
-}
-function encode(data, aa, extraData) {
-  const temp = {
-    "extraData": JSON.stringify(extraData),
-    "businessData": JSON.stringify(data),
-    "secretp": aa,
+  try {
+    $.risk = false
+    $.red = 0
+    $.total = 0
+    await getHomeData()
+    await $.wait(2000)
+    if ($.risk) return
+    await getHomeData(true)
+    await helpFriends()
+  } catch (e) {
+    $.logErr(e)
   }
-  return { "ss": (JSON.stringify(temp)) };
 }
-function getRnd() {
-  return Math.floor(1e6 * Math.random()).toString();
+
+async function receiveCards() {
+  for (let token of receiveCardList) {
+    await receiveCard(token)
+  }
 }
+
 function showMsg() {
   return new Promise(resolve => {
+    if (!$.risk) message += `本次运行获得${Math.round($.red * 100) / 100}红包，共计红包${$.total}`
     if (!jdNotify) {
       $.msg($.name, '', `${message}`);
     } else {
       $.log(`京东账号${$.index}${$.nickName}\n${message}`);
     }
-    if (new Date().getHours() === 23) {
-      $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}`);
-    }
     resolve()
   })
 }
 
-function getHomeData(info=false) {
+async function helpFriends() {
+  $.canHelp = true
+  for (let code of $.newShareCodes) {
+    if (!code) continue
+    await helpFriend(code)
+    if (!$.canHelp) return
+    await $.wait(4000)
+  }
+}
+
+function getHomeData(info = false) {
   return new Promise((resolve) => {
-    $.post(taskPostUrl('nian_getHomeData'), async (err, resp, data) => {
+    $.post(taskPostUrl('newyearmoney_home'), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -129,22 +170,34 @@ function getHomeData(info=false) {
         } else {
           data = JSON.parse(data);
           if (data && data.data['bizCode'] === 0) {
-            $.userInfo = data.data.result.homeMainInfo
-            $.secretp = $.userInfo.secretp;
-            if(!$.secretp){
-              console.log(`账号被风控`)
-              message += `账号被风控，无法参与活动\n`
-              $.secretp = null
+            const {inviteId, poolMoney} = data.data.result.userActBaseInfo
+            $.cardList = data.data.result.cardInfos
+            if (info) {
+              $.total = poolMoney
+              if (sendAccount.includes($.index.toString())) {
+                let cardList = $.cardList.filter(vo => vo.cardType !== 7)
+                if (cardList.length) {
+                  console.log(`送出当前账号第一张卡（每天只能领取一个好友送的一张卡）`)
+                  await sendCard(cardList[0].cardNo)
+                }
+              }
               return
             }
-            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore - $.userInfo.raiseInfo.curLevelStartScore}🧨`)
-
-            if(info) {
-              message += `当前爆竹${$.userInfo.raiseInfo.remainScore}🧨\n`
+            console.log(`您的好友助力码为：${inviteId}`)
+            await $.wait(2000)
+            for (let i = 1; i <= 6; ++i) {
+              let cards = data.data.result.cardInfos.filter(vo => vo.cardType === i)
+              for (let j = 0; j < cards.length; j += 2) {
+                if (j + 1 < cards.length) {
+                  let cardA = cards[j], cardB = cards[j + 1]
+                  console.log(`去合并${i}级卡片`)
+                  await consumeCard(`${cardA.cardNo},${cardB.cardNo}`)
+                  await $.wait(2000)
+                }
+              }
             }
-          }
-          else{
-            $.secretp = null
+          } else {
+            $.risk = true
             console.log(`账号被风控，无法参与活动`)
             message += `账号被风控，无法参与活动\n`
           }
@@ -158,198 +211,143 @@ function getHomeData(info=false) {
   })
 }
 
-function pkInfo() {
-  return new Promise(resolve => {
-    $.post(taskPostUrl("nian_pk_getHomeData", {}, "nian_pk_getHomeData"), async (err, resp, data) => {
+function lotteryHundredCard() {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('newyearmoney_lotteryHundredCard'), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            console.log(data)
+          data = JSON.parse(data);
+          if (data && data.data['bizCode'] === 0) {
+            console.log(JSON.stringify(data))
+          } else {
+            console.log(data.data.bizMsg)
           }
         }
       } catch (e) {
-        $.logErr(e, resp)
+        $.logErr(e, resp);
       } finally {
         resolve();
       }
     })
   })
 }
-function pkCollectScore() {
-  return new Promise(resolve => {
-    $.post(taskPostUrl("nian_pk_collectScore", {}, "nian_pk_collectScore"), async (err, resp, data) => {
+
+function showHundredCardInfo(cardNo) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('newyearmoney_showHundredCardInfo', {cardNo: cardNo}), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            console.log(data)
+          data = JSON.parse(data);
+          console.log(data)
+          if (data && data.data['bizCode'] === 0) {
+            console.log(JSON.stringify(data))
+          } else {
+            console.log(data.data.bizMsg)
           }
         }
       } catch (e) {
-        $.logErr(e, resp)
+        $.logErr(e, resp);
       } finally {
         resolve();
       }
     })
   })
 }
-function pkTaskDetail() {
-  return new Promise(resolve => {
-    $.post(taskPostUrl("nian_pk_getTaskDetail", {}, "nian_pk_getTaskDetail"), async (err, resp, data) => {
+
+function receiveHundredCard(cardNo) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('newyearmoney_receiveHundredCard', {cardNo: cardNo}), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            console.log(data)
+          data = JSON.parse(data);
+          console.log(data)
+          if (data && data.data['bizCode'] === 0) {
+            console.log(JSON.stringify(data))
+          } else {
+            console.log(data.data.bizMsg)
           }
         }
       } catch (e) {
-        $.logErr(e, resp)
+        $.logErr(e, resp);
       } finally {
         resolve();
       }
     })
   })
 }
-function pkAssignGroup(inviteId) {
-  let temp = {
-    "confirmFlag": 1,
-    "inviteId": inviteId,
-  }
-  const extraData = {
-    "jj": 6,
-    "buttonid": "jmdd-react-smash_0",
-    "sceneid": "homePageh5",
-    "appid": '50073'
-  }
-  let body = {
-    ...encode(temp, $.secretp, extraData),
-    inviteId:inviteId
-  }
-  return new Promise(resolve => {
-    $.post(taskPostUrl("nian_pk_assistGroup", body, "nian_pk_assistGroup"), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
+
+function consumeCard(cardNo) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      $.post(taskPostUrl('newyearmoney_consumeCard',{"cardNo":cardNo}), async (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`)
+            console.log(`${$.name} API请求失败，请检查网路重试`)
+          } else {
             data = JSON.parse(data);
-            console.log(data)
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-function getArInfo() {
-  return new Promise(resolve => {
-    $.get(taskArGetUrl("arNianGetUser.do"), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.code === 200) {
-              const { level,gameNum,maxGameNum} = data.rv
-              $.level = level
-              $.maxLevel = 27
-              console.log(`当前第${$.level}/${$.maxLevel}关`)
-              for(let i = gameNum;i<maxGameNum&&$.level<=$.maxLevel;++i){
-                await arStart($.level)
-                await $.wait(5000)
-              }
+            if (data && data.data['bizCode'] === 0) {
+              $.red += parseFloat(data.data.result.currentTimeMoney)
+              console.log(`合成成功，获得${data.data.result.currentTimeMoney}红包`)
+            } else {
+              $.risk = true
+              console.log(`账号被风控，无法参与活动`)
+              message += `账号被风控，无法参与活动\n`
             }
-            else{
-              console.log(`AR游戏信息获取失败，${JSON.stringify(data)}`)
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve();
+        }
+      })
+    }, 1000)
+  })
+}
+
+function helpFriend(inviteId) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('newyearmoney_assist', {inviteId: inviteId}), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data && data.data['bizCode'] === 0) {
+            console.log(data.data.result.msg)
+          } else {
+            console.log(`helpFriends ${data.data.bizMsg}`)
+            if (data.data.bizCode === -523) {
+              $.canHelp = false
             }
           }
         }
       } catch (e) {
-        $.logErr(e, resp)
+        $.logErr(e, resp);
       } finally {
         resolve();
       }
     })
   })
 }
-function arStart(level) {
-  return new Promise(resolve => {
-    $.post(taskArPostUrl("arNianStartGame.do", `level=${level}`), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.code === 0) {
-              console.log(`游戏开启成功，等待20秒完成`)
-              await $.wait(28*1000)
-              await arEnd(level,data.rv.random)
-            }
-            else{
-              console.log(`游戏开启失败，错误：${JSON.stringify(data)}`)
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
-function arEnd(level,random) {
-  return new Promise(resolve => {
-    $.post(taskArPostUrl("arNianEndGame.do", `random=${random}&type=1&level=${level}`), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.code === 0) {
-              const { level, maxLevel} = data.rv
-              $.level = level
-              $.maxLevel = maxLevel
-              console.log(`游戏完成成功，获得${data.rv.winAward + data.rv.firstWin}🧨，通关情况：${level}/${maxLevel}`)
-            }
-            else{
-              console.log(`游戏开启失败，错误：${JSON.stringify(data)}`)
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
+
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://code.chiang.fun/api/v1/jd/jdnian/read/${randomCount}/`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({
+      url: `https://code.chiang.fun/api/v1/jd/year/read/${randomCount}/`,
+      'timeout': 10000
+    }, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -370,6 +368,55 @@ function readShareCode() {
     resolve()
   })
 }
+function sendCard(cardNo) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('newyearmoney_sendCard', {"cardNo": cardNo}), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data && data.data['bizCode'] === 0) {
+            receiveCardList.push(data.data.result.token)
+            console.log(`送卡成功`)
+          } else {
+            console.log(`送卡失败，${data.data.bizMsg}`)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
+function receiveCard(token) {
+  return new Promise((resolve) => {
+    $.post(taskPostUrl('newyearmoney_receiveCard', {"token": token}), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          if (data && data.data['bizCode'] === 0) {
+            console.log(`领卡成功`)
+          } else {
+            console.log(`领卡失败，${data.data.bizMsg}`)
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp);
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
+
 //格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
@@ -390,19 +437,42 @@ function shareCodesFormat() {
     resolve();
   })
 }
+
 function requireConfig() {
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
     //Node.js用户请在jdCookie.js处填写京东ck;
     let shareCodes = []
     console.log(`共${cookiesArr.length}个京东账号\n`);
-    if ($.isNode() && process.env.JDNIAN_SHARECODES) {
-      if (process.env.JDNIAN_SHARECODES.indexOf('\n') > -1) {
-        shareCodes = process.env.JDNIAN_SHARECODES.split('\n');
+    if ($.isNode() && process.env.JDNY_SHARECODES) {
+      if (process.env.JDNY_SHARECODES.indexOf('\n') > -1) {
+        shareCodes = process.env.JDNY_SHARECODES.split('\n');
       } else {
-        shareCodes = process.env.JDNIAN_SHARECODES.split('&');
+        shareCodes = process.env.JDNY_SHARECODES.split('&');
       }
     }
+
+    if ($.isNode() && process.env.JDNY_SENDACCOUNT) {
+      if (process.env.JDNY_SENDACCOUNT.indexOf('\n') > -1) {
+        sendAccount = process.env.JDNY_SENDACCOUNT.split('\n');
+      } else {
+        sendAccount = process.env.JDNY_SENDACCOUNT.split('&');
+      }
+    }
+
+    if (sendAccount.length)
+      console.log(`将要送出卡片的是账号第${sendAccount.join(',')}号账号`)
+
+    if ($.isNode() && process.env.JDNY_RECEIVEACCOUNT) {
+      if (process.env.JDNY_RECEIVEACCOUNT.indexOf('\n') > -1) {
+        receiveAccount = process.env.JDNY_RECEIVEACCOUNT.split('\n');
+      } else {
+        receiveAccount = process.env.JDNY_RECEIVEACCOUNT.split('&');
+      }
+    }
+    if (receiveAccount.length)
+      console.log(`将要领取卡片的是账号第${receiveAccount.join(',')}号账号`)
+
     $.shareCodesArr = [];
     if ($.isNode()) {
       Object.keys(shareCodes).forEach((item) => {
@@ -415,38 +485,10 @@ function requireConfig() {
     resolve()
   })
 }
-function taskArGetUrl(function_id) {
-  let url = `https://arvractivity.jd.com/nian/${function_id}`;
-  return {
-    url,
-    headers: {
-      "Cookie": cookie,
-      "origin": "https://h5.m.jd.com",
-      'Content-Type': 'application/x-www-form-urlencoded',
-      "User-Agent":  "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
-      'referer': 'https://h5.m.jd.com/babelDiy/Zeus/2ZUbtdUfe8ZTyCQrVecyjdNehHpL/index.html'
-    }
-  }
-}
-function taskArPostUrl(function_id, body = '') {
-  let url = `https://arvractivity.jd.com/nian/${function_id}`;
-  return {
-    url,
-    body: body,
-    headers: {
-      "Cookie": cookie,
-      "origin": "https://h5.m.jd.com",
-      'Content-Type': 'application/x-www-form-urlencoded',
-      "User-Agent":  "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0",
-      'referer': 'https://h5.m.jd.com/babelDiy/Zeus/2ZUbtdUfe8ZTyCQrVecyjdNehHpL/index.html'
-    }
-  }
-}
+
+
 function taskPostUrl(function_id, body = {}, function_id2) {
   let url = `${JD_API_HOST}`;
-  if (function_id2) {
-    url += `?functionId=${function_id2}`;
-  }
   return {
     url,
     body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0`,
@@ -459,6 +501,8 @@ function taskPostUrl(function_id, body = {}, function_id2) {
     }
   }
 }
+
+
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
@@ -499,6 +543,7 @@ function TotalBean() {
     })
   })
 }
+
 function safeGet(data) {
   try {
     if (typeof JSON.parse(data) == "object") {
@@ -510,6 +555,7 @@ function safeGet(data) {
     return false;
   }
 }
+
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
