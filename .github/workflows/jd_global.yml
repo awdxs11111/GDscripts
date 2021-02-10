@@ -1,5 +1,5 @@
 
-name: jd_global 环球挑战赛
+name: jd_global 环球挑战赛(2.22)
  
 on:
   workflow_dispatch:
