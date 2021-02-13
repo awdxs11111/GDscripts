@@ -4,7 +4,7 @@ name: jd_daydlt 天天优惠大乐透
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0 20 * * *'
+     - cron: '0 10 * * *'
   watch:
     types: started
 jobs:
