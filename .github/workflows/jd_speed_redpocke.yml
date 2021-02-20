@@ -1,5 +1,5 @@
 
-name: jd_speed_redpocke 京东极速版红包
+name: jd_speed_redpocke 京东极速版红包(3.3)
  
 on:
   workflow_dispatch:
